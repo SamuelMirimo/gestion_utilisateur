@@ -1,64 +1,32 @@
 //importation des modules
-const express = require('express');
-
-//creation du routeur avec express
 const router = express();
+const express = require('express');
+const userController = require('../controllers/userController');
+
+//=======================================================================
+// ROUTES CRUD
+//=======================================================================
 
 //route qui liste tout les utilisateurs
-router.get('/', (req, res) => {
-
-    res.json({
-        message : 'Lites des utilisateurs'
-    });
-});
+router.get('/', userController.getAllUsers);
 
 //route qui recupere un utilisateur specifique 
-router.get('/:id', (req, res) => {
-
-    const userId = req.params.id;
-    res.json({
-        message : `Utilisateur #${userId}`,
-        donnes : req.body
-    });
-});
+router.get('/:id', userController.getUserById);
 
 //route pour creer un user
-router.post('/', (req, res) => {
-    
-    const nouveauUser = {
-        id : Date.now(),
-        ...req.body,
-        dateCreation : new Date()
-    };
-
-    console.log('Donnees recues :', req.body);
-
-    res.json({
-        message : 'user crée !',
-        utilisateur : nouveauUser
-    });
-});
+router.post('/', userController.createUser);
 
 //route pour modifier un user 
-router.put('/:id', (req, res) => {
-
-    const id = req.params.id;
-
-    console.log(`utilisateur #${id} modifié`);
-
-    res.json({
-        message : `utilisateur #${id} modifié`,
-        donnees : req.body
-    });
-});
+router.put('/:id', userController.updateUser);
 
 //route pour supprimer un user
-router.delete('/:id', (req, res) => {
-    res.json({
-        message : `utilisateur #${req.params.id} supprimée`
-    });
-});
+router.delete('/:id', userController.deleteUser);
 
-//exportation
+//route de recherche
+router.get('/search', userController.userSearch);
+
+//========================================================================
+// EXPORTATION
+//========================================================================
 module.exports = router;
 
