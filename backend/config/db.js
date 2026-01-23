@@ -38,8 +38,8 @@ async function testConnection () {
 
     }catch(error) {
 
-        console.error('### erreur de connexion a myql :', error.message);
-        console.log('### verifie : wamp, les identifiants .env');
+        console.error('  erreur de connexion a myql :', error.message);
+        console.log('  verifie : wamp, les identifiants .env');
 
         return false;
 

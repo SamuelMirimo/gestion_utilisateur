@@ -12,34 +12,34 @@ function validateUser(userData) {
 
     //validation du nom
     if(!userData.nom || userData.nom.trim().length < 2 ) {
-        errors.push('### le nom doit avoir minimu 2 caractères');
+        errors.push('  le nom doit avoir minimu 2 caractères');
     }
 
     //validation de l'email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(!userData.email || !emailRegex.test(userData.email)) {
-        errors.push('### Email invalide');
+        errors.push('  Email invalide');
     }
 
     //validation du mot de passe
     if(!userData.password || userData.password.length < 6) {
-        errors.push('### le mot de passe doit avoir au moins 6 caracteres');
+        errors.push('  le mot de passe doit avoir au moins 6 caracteres');
     }
 
     //validation de la date de naissance
     if(!userData.date_naissance) {
-        errors.push('### la date de naissance est requise');
+        errors.push('  la date de naissance est requise');
     }else {
         const naissance = new Date(userData.date_naissance);
         const aujourdhui = new Date();
 
         if(naissance > aujourdhui){
-            errors.push('### la date de naissance ne peut etre dans le futur');
+            errors.push('  la date de naissance ne peut etre dans le futur');
         }
 
         const age = calculerAge(userData.date_naissance);
         if (age > 150) {
-            errors.push('### age superieur à 150 ans');
+            errors.push('  age superieur à 150 ans');
         }
     }
     return {
@@ -94,7 +94,7 @@ async function createUser(userData) {
         const validation = validateUser(userData);
 
         if(!validateUser.isValid) {
-            throw new Error (`### Validation échoué :${validation.errors.join(', ')}`);
+            throw new Error (`Validation échoué :${validation.errors.join(', ')}`);
         }
 
         //calcul de l'age 
@@ -133,7 +133,7 @@ async function createUser(userData) {
     }catch(error) { 
 
         if(error.code === 'ER_DUP_ENTRY') {
-            throw new Error('### Cet email à été utilié');
+            throw new Error('Cet email à été utilié');
         }
         throw error;
 
@@ -208,7 +208,7 @@ async function updateUser(userId, updates) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if(!emailRegex.test(updates.email)){
-                throw new Error('### Email invalide');
+                throw new Error('  Email invalide');
             }
             fields.push('email = ?');
             values.push(updates.email);
@@ -221,7 +221,7 @@ async function updateUser(userId, updates) {
             values.push(updates.date_naissance, age)
         }
         if (fields.length === 0) {
-            throw new Error(' ### Aucune donnée à mettre à jour');
+            throw new Error('   Aucune donnée à mettre à jour');
         }
 
         values.push(userId); //pour le where
@@ -232,7 +232,7 @@ async function updateUser(userId, updates) {
         );
 
         if (result.affectedRows === 0) {
-            throw new Error('### Utilisateur non trouvé');
+            throw new Error('  Utilisateur non trouvé');
         }
 
         //retoutne le user mis à jour

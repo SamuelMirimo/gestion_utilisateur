@@ -108,11 +108,11 @@ async function startServer() {
 
     //si la connexion échoue
     if (!dbConnected) {
-        console.log('### Impossible de démarrer : MySQL non connecté');
+        console.log('  Impossible de démarrer : MySQL non connecté');
         console.log('Vérifie :');
-        console.log('### 1. WAMP est-il démarré ? (icône verte)');
-        console.log('### 2. Le fichier .env est-il correct ?');
-        console.log('### 3. phpMyAdmin fonctionne-t-il ?');
+        console.log('  1. WAMP est-il démarré ? (icône verte)');
+        console.log('  2. Le fichier .env est-il correct ?');
+        console.log('  3. phpMyAdmin fonctionne-t-il ?');
         return;
     }
 
