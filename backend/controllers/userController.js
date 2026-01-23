@@ -136,3 +136,66 @@ const updateUser = async (req, res) => {
     }
 };
 
+//supprimer un utilisateur
+const deleteUser = async (res, req) => {
+    const userId = parseInt(req.params.id);
+    console.log(`Suppresion de l'utilisateur #${userId}`);
+    
+    if (isNaN(userId) || userId <= 0) {
+        return sendError(res, 404, 'ID invalide');
+    }
+
+    try{
+        const userExists = await userModel.getUserById(userId);
+        if(!userExists) {
+            return sendError(res, 404, `utilisateur #${userId} non trouvé`);
+        }
+
+        const deleted = await userModel.deleteUser(userId);
+        if(!deleted) {
+            return sendError(res, 500, 'Erreur lors de la suppression');
+        }
+
+        sendSuccess(res, 200, `utilisateur #${userId} supprimé avec succes`);
+
+    }catch(error) {
+        console.error(`Erreur dans deleteUser (${userId}) :`, error);
+        sendError(res, 500, `Erreur lors de la suppression de l\'utilisateur`);
+    }
+};
+
+//rechercher un utilisateur par son nom ou son email
+const userSearch = async (req, res) => {
+
+    //recupere le terme de recherche depuis la query string
+    const searchTerm = req.query.q;
+    console.log(`Recherche d'utilisateurs : "${searchTerm}"`);
+
+    //validation du terme de recherche
+    if(!searchTerm || searchTerm.trim.length < 2) {
+        return sendError(res, 400, 'le terme de recherche doit contenir au moins 2 caracteres');
+    }
+
+    try{
+        const users = await userModel.searchUsers(searchTerm.trim());
+
+        sendSuccess(res, 200, `${users.length} utilisateur(s) trouvée :`, users);
+
+    }catch(error) {
+        console.error('Erreur dans searchUser', error);
+        sendError(res, 500, 'Erreur lors de la recherche');
+    }
+};
+
+//=========================================================================
+// EXPORTATION 
+//=========================================================================
+
+module.exports = {
+    getAllUsers,
+    getUserById,
+    createUser,
+    updateUser,
+    deleteUser,
+    userSearch
+};
