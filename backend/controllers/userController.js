@@ -2,29 +2,33 @@
 const userModel = require('../models/userModel');
 
 //======================================================
-// FONCTIONS HELPER POUR LES MESSAGES
+// FONCTIONS HELPER POUR LES MESSAGES (CORRIGÉES)
 //======================================================
-// envoi un message d'erreur 
+
+// Envoi un message d'erreur 
 const sendError = (res, status, message) => {
-    res.status(status).json({
-        success : false,
-        message : message
+    // On ajoute un return pour s'assurer qu'on arrête l'exécution
+    return res.status(status).json({
+        success: false,
+        message: message
     });
 };
 
-//envoi un message de succes
-const sendSuccess = (res, status, message) => {
-    res.status(status).json({
-        success : true, 
-        message : message
-    });
+// Envoi un message de succès
+// Ajout de l'argument 'data' ici !
+const sendSuccess = (res, status, message, data = null) => {
+    const responseBody = {
+        success: true,
+        message: message
+    };
 
-    if(data !== null) {
-        response.data = data;
+    // On n'ajoute la clé data que si elle contient quelque chose
+    if (data !== null) {
+        responseBody.data = data;
     }
-    res.status(status).json(response);
-};
 
+    return res.status(status).json(responseBody);
+};
 //=================================================================
 // FONCTIONS DU CONTROLEUR
 //=================================================================
@@ -80,16 +84,16 @@ const createUser = async (req, res) => {
     try{
         const user = await userModel.createUser(req.body);
 
-        sendSuccess(res, 201, 'utilisateur crée avec succès', error);
+        return sendSuccess(res, 201, 'utilisateur crée avec succès', user);
 
     }catch(error) {
         console.error('  Erreur dans createUser', error);
 
         if(error.message.includes('Validation échoué') ||
-            error.message.includes('Cet email a déjà utilisé')) {
-            sendError(res, 400, error.message);
+            error.message.includes('Cet email à été utilisé')) {
+            return sendError(res, 400, error.message);
         }else{
-            sendError(res, 500, '  Erreur lor de la creation de l\'utilisateur');
+            return sendError(res, 500, '  Erreur lor de la creation de l\'utilisateur');
         }
     }
 };
@@ -97,11 +101,11 @@ const createUser = async (req, res) => {
 //mettre a jour un utilisateeur existant 
 const updateUser = async (req, res) => {
 
-    const usesId = parseInt(req.params.id);
+    const userId = parseInt(req.params.id);
     console.log(`Mise a jour de l'utilisateur #${userId}`);
-    console.lod('Données de la mise à jour', req.body);
+    console.log('Données de la mise à jour', req.body);
 
-    if(isNaN(usesId) || userId <= 0) {
+    if(isNaN(userId) || userId <= 0) {
         sendError(res, 400, '  Id invalide');
     }
     
@@ -117,7 +121,7 @@ const updateUser = async (req, res) => {
        if(!userExists) {
             return sendError(res, 404, `utilisateur #${userId} non trouvé`);
        } 
-       const updateUser = await userModel.updateUser(usesId, req.body);
+       const updateUser = await userModel.updateUser(userId, req.body);
 
        sendSuccess(res, 200, `utilisateur #${userId} mis à jour avec succès`, updateUser);
 
@@ -137,7 +141,7 @@ const updateUser = async (req, res) => {
 };
 
 //supprimer un utilisateur
-const deleteUser = async (res, req) => {
+const deleteUser = async (req, res) => {
     const userId = parseInt(req.params.id);
     console.log(`Suppresion de l'utilisateur #${userId}`);
     
@@ -156,11 +160,11 @@ const deleteUser = async (res, req) => {
             return sendError(res, 500, 'Erreur lors de la suppression');
         }
 
-        sendSuccess(res, 200, `utilisateur #${userId} supprimé avec succes`);
+        return sendSuccess(res, 200, `utilisateur #${userId} supprimé avec succes`);
 
     }catch(error) {
         console.error(`Erreur dans deleteUser (${userId}) :`, error);
-        sendError(res, 500, `Erreur lors de la suppression de l\'utilisateur`);
+        return sendError(res, 500, `Erreur lors de la suppression de l\'utilisateur`);
     }
 };
 
@@ -172,7 +176,7 @@ const userSearch = async (req, res) => {
     console.log(`Recherche d'utilisateurs : "${searchTerm}"`);
 
     //validation du terme de recherche
-    if(!searchTerm || searchTerm.trim.length < 2) {
+    if(!searchTerm || searchTerm.trim().length < 2) {
         return sendError(res, 400, 'le terme de recherche doit contenir au moins 2 caracteres');
     }
 

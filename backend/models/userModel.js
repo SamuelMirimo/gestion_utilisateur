@@ -1,6 +1,6 @@
 // importation des modules
 const bcrypt = require('bcrypt');
-const pool = require('../config/db');
+const { pool } = require('../config/db');
 
 //====================================================
 // VALIDATIONS DES DONNEES
@@ -93,7 +93,7 @@ async function createUser(userData) {
         //validation des donnees user
         const validation = validateUser(userData);
 
-        if(!validateUser.isValid) {
+        if(!validation.isValid) {
             throw new Error (`Validation échoué :${validation.errors.join(', ')}`);
         }
 
@@ -101,7 +101,7 @@ async function createUser(userData) {
         const age = calculerAge(userData.date_naissance);
 
         //hash du mot de passe
-        const hashPassword = await hashPassword(userData.password);
+        const hashedPassword = await hashPassword(userData.password);
 
         //connexiona a la DB 
         connection = await pool.getConnection();
@@ -109,13 +109,13 @@ async function createUser(userData) {
         //insertion 
         const [result] =  await connection.query(
             `INSERT INTO users
-            (nom, postnom, email, date_naissance, age)
-            VALUES (?, ?, ?, ?, ?)`, 
+            (nom, postnom, email, password, date_naissance, age)
+            VALUES (?, ?, ?, ?, ?, ?)`, 
             [
                 userData.nom,
                 userData.postnom || '',
                 userData.email,
-                hashPassword,
+                hashedPassword,
                 userData.date_naissance,
                 age
             ]
@@ -130,10 +130,13 @@ async function createUser(userData) {
         //ne renvoie pas le mot de passe hashé
         const user = users[0];
         delete user.password;
+
+        return user;
+        
     }catch(error) { 
 
         if(error.code === 'ER_DUP_ENTRY') {
-            throw new Error('Cet email à été utilié');
+            throw new Error('Cet email à été utilisé');
         }
         throw error;
 
@@ -162,7 +165,7 @@ async function getAllUsers() {
 }
 
 //recupere un user par son id
-async function getUserById(userData) {
+async function getUserById(userId) {
 
     let connection;
 
@@ -198,7 +201,7 @@ async function updateUser(userId, updates) {
             values.push(updates.nom);
         } 
 
-        if(updates.postom !== undefined) {
+        if(updates.postnom !== undefined) {
             fields.push('postnom = ?');
             values.push(updates.postnom);
         }
