@@ -8,7 +8,7 @@ Ce projet inclut la validation des données, le hachage des mots de passe avec B
 * **CRUD Complet** : Créer, Lire, Mettre à jour et Supprimer des utilisateurs.
 * **Recherche dynamique** : Rechercher des utilisateurs par nom ou email.
 * **Sécurité** : Hachage des mots de passe avec `bcrypt`.
-* **Validation** : Vérification stricte des formats d'email, de la longueur des noms et de l'âge (calculé automatiquement via la date de naissance).
+* **Validation** : Vérification stricte des formats d'email, de la longueur des noms et de l'âge        (calculé automatiquement via la date de naissance).
 * **Gestion de base de données** : Utilisation d'un pool de connexions asynchrones avec `mysql2/promise`.
 
 ## Technologies utilisées
@@ -43,17 +43,20 @@ DB_USER=root
 DB_PASSwORD=votre_mot_de_passe
 DB_NAME=gestion_users
 DB_PORT=3306
+```
 
 4. **Lancer le serveur**
 
 ```bash
 npm run dev
+```
+## Méthode,Endpoint et Description
 
-## les endpoints
-Méthode,Endpoint,Description
-GET,/api/users  **Récupère tous les utilisateurs**
-GET,/api/users/:id  **Récupère un utilisateur par ID**
-GET,/api/users/search?q= **"Recherche (nom, postnom, email)"**
-POST,/api/users   **Crée un nouvel utilisateur**
-PUT,/api/users/:id  **Met à jour un utilisateur**
-DELETE,/api/users/:id  **Supprime un utilisateur**
+GET,/api/users             **Récupère tous les utilisateurs**
+GET,/api/users/:id         **Récupère un utilisateur par ID**
+GET,/api/users/search?q=   **"Recherche (nom, postnom, email)"**
+POST,/api/users            **Crée un nouvel utilisateur**
+PUT,/api/users/:id         **Met à jour un utilisateur**
+DELETE,/api/users/:id      **Supprime un utilisateur**
+
+Par MIRIMO LUBUTO Samuel, Merci de laisser une étoile vous trouvez le projet intéressant !!!
