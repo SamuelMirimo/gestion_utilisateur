@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 //LES MIDDLEWARES
 //=========================================================
 
-//middleware qui permet de lire le json des requettes
+//middleware qui permet de lire le json
 app.use(express.json());
 
 //monte les routes utilisateurs sous api/users

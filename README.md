@@ -3,7 +3,7 @@
 Une API REST construite avec Node.js, Express et MySQL pour gérer des utilisateurs. 
 Ce projet inclut la validation des données, le hachage des mots de passe avec Bcrypt et une gestion complète du CRUD.
 
-## Fonctionnalités
+## Fonctionnalités essenteil
 
 * **CRUD Complet** : Créer, Lire, Mettre à jour et Supprimer des utilisateurs.
 * **Recherche dynamique** : Rechercher des utilisateurs par nom ou email.
