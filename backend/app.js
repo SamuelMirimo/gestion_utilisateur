@@ -4,7 +4,7 @@ const express = require('express');
 const userRoutes = require('./routes/userRoutes');
 const { pool, testConnection } = require('./config/db');
 
-//initialisation de l'application (creation d'une instance de express)
+//initialisation de l'application (creation d'une)
 const app = express();
 const PORT = process.env.PORT || 5000;
 
