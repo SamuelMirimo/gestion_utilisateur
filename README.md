@@ -35,7 +35,7 @@ Ce projet inclut la validation des données, le hachage des mots de passe avec B
    cd backend
    npm install
    
-3. **Configurer l'environnement Créez un fichier .env à la racine du dossier backend :**
+3. **Configurer l'environnement : Créez un fichier .env à la racine du dossier backend :**
 ```
 PORT=3000
 DB_HOST=localhost
